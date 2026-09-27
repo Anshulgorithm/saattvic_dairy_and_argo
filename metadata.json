@@ -1,0 +1,6 @@
+{
+  "name": "Saatvic Dairy and Agro — Pure Essence of Nature",
+  "description": "Traditional Bilona-method cow ghee and farm produce from the hills of Chamba, Himachal Pradesh, with real-time inventory tracking, QR code UPI & card payments, and order management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
