@@ -8,9 +8,9 @@ export const INITIAL_SETTINGS: StoreSettings = {
   currencySymbol: '₹',
   freeShippingThreshold: 1500,
   standardShippingFee: 99,
-  upiId: 'saatvicdairy@upi',
+  upiId: 'jsridhima-1@okhdfcbank',
   upiName: 'Saatvic Dairy and Agro',
-  upiQrImage: '/src/assets/images/store_qr_code_upi_1790500695087.jpg',
+  upiQrImage: '/src/assets/images/upi_qr_code_real.jpg',
   enableCod: true,
   enableCardGateway: true,
   contactEmail: 'hello@saatvicdairy.com',
@@ -18,6 +18,7 @@ export const INITIAL_SETTINGS: StoreSettings = {
   storeAddress: 'Chamba, Himachal Pradesh, India',
   announcementText: 'Free shipping across India on all orders above ₹1,500.',
   showAnnouncement: true,
+  adminPassword: 'chamba2026',
 };
 
 export const INITIAL_PRODUCTS: Product[] = [

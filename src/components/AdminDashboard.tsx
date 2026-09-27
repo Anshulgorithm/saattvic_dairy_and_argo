@@ -19,6 +19,7 @@ import {
   ArrowLeft,
   Truck,
   Upload,
+  Lock,
 } from 'lucide-react';
 
 type AdminTab = 'inventory' | 'orders' | 'analytics' | 'settings';
@@ -35,6 +36,7 @@ export const AdminDashboard: React.FC = () => {
     updateSettings,
     formatPrice,
     setViewMode,
+    lockAdmin,
     showToast,
   } = useStore();
 
@@ -154,6 +156,14 @@ export const AdminDashboard: React.FC = () => {
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Storefront</span>
+            </button>
+            <button
+              onClick={lockAdmin}
+              className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-medium"
+              title="Log out and require the password again to re-enter the Merchant Portal"
+            >
+              <Lock className="w-4 h-4" />
+              <span>Log Out</span>
             </button>
             <div className="h-4 w-px bg-stone-700" />
             <div>

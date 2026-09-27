@@ -108,6 +108,7 @@ export interface StoreSettings {
   storeAddress: string;
   announcementText: string;
   showAnnouncement: boolean;
+  adminPassword: string;
 }
 
 export interface Review {

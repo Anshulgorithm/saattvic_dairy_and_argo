@@ -11,6 +11,7 @@ export const Navbar: React.FC = () => {
     setIsCartOpen,
     viewMode,
     setViewMode,
+    requestAdminAccess,
     setIsOrderTrackingOpen,
     setSelectedCategory,
     searchQuery,
@@ -148,7 +149,7 @@ export const Navbar: React.FC = () => {
 
           {/* Mode Switcher: Merchant Admin / Storefront */}
           <button
-            onClick={() => setViewMode(viewMode === 'store' ? 'admin' : 'store')}
+            onClick={() => (viewMode === 'admin' ? setViewMode('store') : requestAdminAccess())}
             className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-colors border ${
               viewMode === 'admin'
                 ? 'bg-amber-600 border-amber-700 text-white shadow-xs'

@@ -49,6 +49,12 @@ interface StoreContextType {
   // UI Navigation & Modals
   viewMode: 'store' | 'admin';
   setViewMode: (mode: 'store' | 'admin') => void;
+  isAdminUnlocked: boolean;
+  isAdminLoginOpen: boolean;
+  setIsAdminLoginOpen: (open: boolean) => void;
+  requestAdminAccess: () => void;
+  unlockAdmin: (password: string) => boolean;
+  lockAdmin: () => void;
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
   isCartOpen: boolean;
@@ -144,7 +150,15 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   // UI state
-  const [viewMode, setViewMode] = useState<'store' | 'admin'>('store');
+  const [viewMode, setViewModeRaw] = useState<'store' | 'admin'>('store');
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('saatvic_admin_unlocked_v1') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -485,6 +499,52 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     showToast('Store settings updated.', 'success');
   };
 
+  // Admin access control: the storefront needs no login at all;
+  // only entering the Merchant Portal requires the password.
+  const setViewMode = (mode: 'store' | 'admin') => {
+    if (mode === 'admin' && !isAdminUnlocked) {
+      setIsAdminLoginOpen(true);
+      return;
+    }
+    setViewModeRaw(mode);
+  };
+
+  const requestAdminAccess = () => {
+    if (isAdminUnlocked) {
+      setViewModeRaw('admin');
+    } else {
+      setIsAdminLoginOpen(true);
+    }
+  };
+
+  const unlockAdmin = (password: string): boolean => {
+    if (password === settings.adminPassword) {
+      setIsAdminUnlocked(true);
+      try {
+        sessionStorage.setItem('saatvic_admin_unlocked_v1', 'true');
+      } catch {
+        // ignore storage errors
+      }
+      setIsAdminLoginOpen(false);
+      setViewModeRaw('admin');
+      showToast('Welcome back to the Merchant Portal.', 'success');
+      return true;
+    }
+    showToast('Incorrect password. Please try again.', 'error');
+    return false;
+  };
+
+  const lockAdmin = () => {
+    setIsAdminUnlocked(false);
+    try {
+      sessionStorage.removeItem('saatvic_admin_unlocked_v1');
+    } catch {
+      // ignore storage errors
+    }
+    setViewModeRaw('store');
+    showToast('Logged out of the Merchant Portal.', 'info');
+  };
+
   return (
     <StoreContext.Provider
       value={{
@@ -512,6 +572,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         formatPrice,
         viewMode,
         setViewMode,
+        isAdminUnlocked,
+        isAdminLoginOpen,
+        setIsAdminLoginOpen,
+        requestAdminAccess,
+        unlockAdmin,
+        lockAdmin,
         selectedProduct,
         setSelectedProduct,
         isCartOpen,

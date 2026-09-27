@@ -10,16 +10,17 @@ import { CheckoutModal } from './components/CheckoutModal';
 import { OrderConfirmationModal } from './components/OrderConfirmationModal';
 import { OrderTrackingModal } from './components/OrderTrackingModal';
 import { AdminDashboard } from './components/AdminDashboard';
+import { AdminLoginModal } from './components/AdminLoginModal';
 import { AboutModal } from './components/AboutModal';
 import { ContactModal } from './components/ContactModal';
 import { ToastContainer } from './components/Toast';
 
 const StorefrontApp: React.FC = () => {
-  const { viewMode } = useStore();
+  const { viewMode, isAdminUnlocked } = useStore();
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafaf8] text-stone-900">
-      {viewMode === 'admin' ? (
+      {viewMode === 'admin' && isAdminUnlocked ? (
         <AdminDashboard />
       ) : (
         <>
@@ -40,6 +41,7 @@ const StorefrontApp: React.FC = () => {
       <OrderTrackingModal />
       <AboutModal />
       <ContactModal />
+      <AdminLoginModal />
       <ToastContainer />
     </div>
   );
