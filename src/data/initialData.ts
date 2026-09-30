@@ -10,15 +10,14 @@ export const INITIAL_SETTINGS: StoreSettings = {
   standardShippingFee: 99,
   upiId: 'jsridhima-1@okhdfcbank',
   upiName: 'Saatvic Dairy and Agro',
-  upiQrImage: '/src/assets/images/upi_qr_code_real.jpg',
+  upiQrImage: '/images/upi_qr_code_real.jpg',
   enableCod: true,
-  enableCardGateway: true,
+  enableCardGateway: false,
   contactEmail: 'hello@saatvicdairy.com',
   contactPhone: '+91 98765 43210',
   storeAddress: 'Chamba, Himachal Pradesh, India',
   announcementText: 'Free shipping across India on all orders above ₹1,500.',
   showAnnouncement: true,
-  adminPassword: 'chamba2026',
 };
 
 export const INITIAL_PRODUCTS: Product[] = [
@@ -43,10 +42,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     dimensions: 'Net Wt. 1 Ltr (910g)',
     material: 'Pure A2 cow milk ghee',
     images: [
-      '/src/assets/images/product_bilona_ghee_jar_close.jpg',
-      '/src/assets/images/product_bilona_ghee_hand_1.jpg',
-      '/src/assets/images/product_bilona_ghee_hand_2.jpg',
-      '/src/assets/images/product_bilona_ghee_jars_group.jpg',
+      '/images/product_bilona_ghee_jar_close.jpg',
+      '/images/product_bilona_ghee_hand_1.jpg',
+      '/images/product_bilona_ghee_hand_2.jpg',
+      '/images/product_bilona_ghee_jars_group.jpg',
     ],
     featured: true,
     rating: 4.9,

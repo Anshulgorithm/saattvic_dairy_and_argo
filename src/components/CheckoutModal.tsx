@@ -80,18 +80,19 @@ export const CheckoutModal: React.FC = () => {
       }
     }
 
+    if (isProcessing) return;
     setIsProcessing(true);
-
-    // Simulate gateway verification
-    setTimeout(() => {
-      setIsProcessing(false);
-      createOrder({
+    try {
+      await createOrder({
         customer: formData,
         paymentMethod,
-        paymentStatus: paymentMethod === 'cod' ? 'pending' : 'paid',
         upiTransactionRef: paymentMethod === 'upi_qr' ? upiRef : undefined,
       });
-    }, 1200);
+      // On success createOrder already closes this modal and shows the confirmation.
+      // On failure it shows an error toast and leaves the form open so the buyer can retry.
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // UPI deep link

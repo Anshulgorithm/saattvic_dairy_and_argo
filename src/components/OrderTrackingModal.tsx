@@ -1,33 +1,40 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
-import { X, Search, CheckCircle2, Clock, Truck, Package, ArrowRight } from 'lucide-react';
-import { OrderStatus } from '../types';
+import { X, Search, CheckCircle2, Clock, Truck, Loader2 } from 'lucide-react';
+import { Order, OrderStatus } from '../types';
 
 export const OrderTrackingModal: React.FC = () => {
   const {
     isOrderTrackingOpen,
     setIsOrderTrackingOpen,
-    orders,
     trackingOrderNumber,
     setTrackingOrderNumber,
+    trackOrder,
     formatPrice,
   } = useStore();
 
   const [inputVal, setInputVal] = useState(trackingOrderNumber || '');
-  const [searchedId, setSearchedId] = useState(trackingOrderNumber || '');
+  const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   if (!isOrderTrackingOpen) return null;
 
-  const currentOrder = orders.find(
-    (o) =>
-      o.orderNumber.toLowerCase() === searchedId.trim().toLowerCase() ||
-      o.id.toLowerCase() === searchedId.trim().toLowerCase() ||
-      o.customer.phone.replace(/[\s+-]/g, '') === searchedId.trim().replace(/[\s+-]/g, '')
-  );
+  const runSearch = async (orderNumber: string) => {
+    const trimmed = orderNumber.trim();
+    if (!trimmed) return;
+    setSearching(true);
+    setNotFound(false);
+    const result = await trackOrder(trimmed);
+    setSearching(false);
+    setCurrentOrder(result);
+    setNotFound(!result);
+    setTrackingOrderNumber(trimmed);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setSearchedId(inputVal);
+    runSearch(inputVal);
   };
 
   const STEPS: { key: OrderStatus; label: string; desc: string }[] = [
@@ -77,7 +84,7 @@ export const OrderTrackingModal: React.FC = () => {
               <Search className="w-4 h-4 absolute left-3 top-3 text-stone-400" />
               <input
                 type="text"
-                placeholder="Enter Order # (e.g. SDA-8842) or Phone Number"
+                placeholder="Enter Order # (e.g. SDA-8842A1B2)"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 bg-stone-50 border border-stone-300 rounded-lg text-xs text-stone-900 focus:outline-none focus:border-stone-500 font-mono-nums"
@@ -85,33 +92,18 @@ export const OrderTrackingModal: React.FC = () => {
             </div>
             <button
               type="submit"
-              className="px-4 py-2 bg-stone-900 text-white rounded-lg text-xs font-medium hover:bg-stone-800 transition-colors shrink-0"
+              disabled={searching}
+              className="px-4 py-2 bg-stone-900 text-white rounded-lg text-xs font-medium hover:bg-stone-800 transition-colors shrink-0 disabled:opacity-60 flex items-center gap-1.5"
             >
-              Lookup Order
+              {searching && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              <span>Lookup Order</span>
             </button>
           </form>
 
-          {/* Quick suggestions if not found */}
-          {!currentOrder && (
-            <div className="bg-stone-50 rounded-xl p-4 border border-stone-200 text-xs">
-              <span className="font-semibold text-stone-800 block mb-2">
-                Recent Orders you can preview:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {orders.slice(0, 3).map((o) => (
-                  <button
-                    key={o.id}
-                    onClick={() => {
-                      setInputVal(o.orderNumber);
-                      setSearchedId(o.orderNumber);
-                    }}
-                    className="px-2.5 py-1 bg-white border border-stone-200 rounded text-stone-700 hover:border-stone-400 font-mono-nums flex items-center gap-1"
-                  >
-                    <span>{o.orderNumber}</span>
-                    <span className="text-stone-400">({o.status})</span>
-                  </button>
-                ))}
-              </div>
+          {notFound && (
+            <div className="bg-stone-50 rounded-xl p-4 border border-stone-200 text-xs text-stone-600">
+              We couldn't find an order with that number. Double-check it and try again — it's on your order
+              confirmation and in the receipt email.
             </div>
           )}
 

@@ -86,7 +86,7 @@ export const Hero: React.FC = () => {
           <div className="lg:col-span-6">
             <div className="relative rounded-2xl overflow-hidden aspect-16/10 shadow-sm border border-stone-200/60 bg-stone-100">
               <img
-                src="/src/assets/images/product_bilona_ghee_jars_group.jpg"
+                src="/images/product_bilona_ghee_jars_group.jpg"
                 alt="Jars of traditional Bilona cow ghee from Saatvic Dairy and Agro"
                 className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-102"
                 referrerPolicy="no-referrer"
